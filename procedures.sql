@@ -1,6 +1,4 @@
-
 DROP PROCEDURE IF EXISTS agregar_reserva;
-
 
 CREATE PROCEDURE agregar_reserva(
     IN hab_id INT, 
@@ -16,13 +14,11 @@ BEGIN
     VALUES (hab_id, usua_id, codi_habitacion, fech_reserva, fech_entrada, fech_salida);
 END;
 
-
-
 USE basedata;
 
 DROP PROCEDURE IF EXISTS cancelar_reserva;
 
-DELIMITER //
+DELIMITER / /
 
 CREATE PROCEDURE cancelar_reserva(
     IN p_reserva_id INT,
@@ -30,39 +26,30 @@ CREATE PROCEDURE cancelar_reserva(
     IN usuario_id INT
 )
 BEGIN
+
+    DELETE FROM codigo_de_reserva 
+    WHERE id = p_reserva_id;
+
+    DELETE FROM reserva_habitacion 
+    WHERE reserva_id = p_reserva_id;
     
     DELETE FROM reserva_usuario 
     WHERE reserva_id = p_reserva_id;
 
-   
     DELETE FROM reserva_fecha 
     WHERE reserva_id = p_reserva_id;
-
    
     DELETE FROM disponibilidad_habitaciones 
     WHERE reservas_id = p_reserva_id;
 
-
     DELETE FROM info_reserva_hotel 
     WHERE reserva_id = p_reserva_id;
 
-   
-    DELETE FROM codigo_de_reserva 
-    WHERE reserva_id = p_reserva_id;
-
-    
-    DELETE FROM reserva_habitacion 
-    WHERE reserva_id = p_reserva_id;
-
-   
     DELETE FROM reservas 
     WHERE id = p_reserva_id;
 
-END //
+END 
 
-DELIMITER ;
+DELIMITER;
 
-
-
-CALL cancelar_reserva(1, 'HAB101', 1);
- 
+CALL cancelar_reserva (1, 'HAB101', 1);
