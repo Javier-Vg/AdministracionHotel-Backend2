@@ -1,25 +1,23 @@
 -- Consulta para contar cuántas habitaciones disponibles hay en un hotel específico en una fecha dada.
 
-CREATE PROCEDURE consulta_recuento_habitaciones_disponibles(in fecha date)
-BEGIN 
+SELECT DISTINCT hotel.nombre_hotel, reserva_fecha.fecha_reservacion, hotel.capacidad_habitaciones
+FROM hotel
+INNER JOIN reserva_fecha
+ON reserva_fecha.fecha_reservacion = "2024-08-20" AND hotel.nombre_hotel = "Hotel Urban Stay";
 
-SELECT id FROM codigo_de_reserva WHERE id IN(
-    SELECT COUNT(status_habitacion) 
-    FROM disponibilidad_habitaciones
-    WHERE disponibilidad_habitaciones.status_habitacion = 1 AND codigo_de_reserva.codigo_habitacion = fecha
-);
-END;
+----------------------------------------------------------------------------------------------------------
+-- Consulta para buscar hoteles cuya ubicación comienza con un texto específico.
 
-CALL consulta_recuento_habitaciones_disponibles("2024-08-20");
+SELECT hotel.nombre_hotel
+FROM hotel
+WHERE hotel.nombre_hotel LIKE "Hotel Urban%";
 
+-----------------------------------------------------------------------------------------------------------
+-- Consulta para obtener las reservas de un cliente (por email) realizadas en el mes anterior.
 
+SELECT * FROM reservas WHERE usuario_id IN (
+    SELECT id FROM clientes WHERE clientes.correo = "javior2000@gmail.com"
+) AND reservas.fecha_reservacion < "2024-08-01";
 
-
-
-
-
-
-
-
-
-
+------------------------------------------------------------------------------------------------------------
+-- Consulta para identificar el hotel con la mayor ocupación en el mes anterior.

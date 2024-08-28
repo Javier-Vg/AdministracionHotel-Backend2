@@ -1,46 +1,40 @@
 
 -- Consultar la disponibilidad de habitaciones por fecha.
-CREATE PROCEDURE FechasDisponibilidad(in fechaConsultada date)
-BEGIN 
+DELIMITER //
 
-    SELECT reserva_fecha.fecha_reservacion as "Fecha de reservas", disponibilidad_habitaciones.status_habitacion as "Disponibilidad"
-    FROM reserva_fecha
-    LEFT JOIN disponibilidad_habitaciones
-    ON reserva_fecha.reserva_id = disponibilidad_habitaciones.habitacion_id
-    WHERE reserva_fecha.fecha_reservacion = fechaConsultada;
+CREATE PROCEDURE ConsultarDisponibilidad(IN fecha DATE)
+BEGIN
+    SELECT DISTINCT hotel.nombre_hotel, reservas.fecha_reservacion, reservas.id as reserva_id, disponibilidad_habitaciones.status_habitacion
+    FROM reservas 
+    INNER JOIN habitaciones 
+    ON reservas.habitacion_id = habitaciones.id
+    INNER JOIN hotel 
+    ON habitaciones.hotel_id = hotel.id
+    INNER JOIN disponibilidad_habitaciones 
+    ON reservas.id = disponibilidad_habitaciones.reservas_id
+    WHERE reservas.fecha_reservacion = fecha;
+END //
 
-END;
+DELIMITER ;
 
-DROP TABLE FechasDisponibilidad;
+CALL ConsultarDisponibilidad("2024-08-20");
 
-use basedata
-
-drop Procedure `FechasDisponibilidad`;
-
-CALL `FechasDisponibilidad`("2024-08-23");
-
+--------------------------------------------------------------------------------------------------------------------------
 -- Calcular la ocupación de un hotel en un rango de fechas.
+DELIMITER ;
+CREATE PROCEDURE FechasRangosDisponibilidad(IN rango1 DATE, IN rango2 DATE)
+BEGIN
+    SELECT DISTINCT hotel.nombre_hotel, reservas.fecha_reservacion, reservas.id AS reserva_id, disponibilidad_habitaciones.status_habitacion
+    FROM reservas 
+    INNER JOIN habitaciones ON reservas.habitacion_id = habitaciones.id
+    INNER JOIN hotel ON habitaciones.hotel_id = hotel.id
+    INNER JOIN disponibilidad_habitaciones ON reservas.id = disponibilidad_habitaciones.reservas_id
+    WHERE reservas.fecha_reservacion >= rango1 AND reservas.fecha_reservacion <= rango2;
+END //
 
-CREATE PROCEDURE FechasDisponibilidadRangoFechas(in rango1 date, in rango2 date)
-BEGIN 
 
-    SELECT reserva_fecha.fecha_reservacion as "Fecha de reservas", disponibilidad_habitaciones.status_habitacion as "Disponibilidad"
-    FROM reserva_fecha
-    LEFT JOIN disponibilidad_habitaciones
-    ON reserva_fecha.reserva_id = disponibilidad_habitaciones.habitacion_id
-    LEFT JOIN 
-        reservas
-    ON 
-        reserva_fecha.reserva_id = reservas.id
-    WHERE 
-        reservas.fecha_entrada >= rango1 AND reservas.fecha_salida <= rango2;
+CALL FechasRangosDisponibilidad("2024-06-12", "2024-07-30");
 
-END;
 
-DROP TABLE FechasDisponibilidadRangoFechas;
 
-use basedata
-
-drop Procedure `FechasDisponibilidadRangoFechas`;
-
-CALL `FechasDisponibilidadRangoFechas`("2024-08-23", "2024-09-30");
+SELECT * FROM reserva_fecha WHERE fecha_reservacion = '2024-08-20';
