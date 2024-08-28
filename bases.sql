@@ -1,10 +1,8 @@
 CREATE DATABASE basedata;
 
 use basedata;
-
 CREATE PROCEDURE crearTablas()
 BEGIN
-
     -- Creacion tabla administradores:
     CREATE TABLE administradores (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -13,10 +11,9 @@ BEGIN
         correo VARCHAR(50) UNIQUE NOT NULL,
         contrasena VARCHAR(50) NOT NULL
     );
-
     INSERT INTO administradores (nombre, apellido, correo, contrasena) VALUES
-    ('Javier', 'Guzmán', 'jvargas@fwdcostarica.com', 'javier34500');
-
+    ('Javier', 'Guzmán', 'jvargas@fwdcostarica.com', 'javier34500'),
+    ("Alexia", "Cahil", "acahil@fwdcostarica.com", "ale123");
     -- Creación de la tabla usuarios
     CREATE TABLE clientes (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,7 +22,6 @@ BEGIN
         correo VARCHAR(50) UNIQUE NOT NULL,
         contrasena VARCHAR(50) NOT NULL
     );
-
     INSERT INTO clientes (nombre, apellido, correo, contrasena) VALUES
     ('Carlos', 'Pérez', 'carlos.perez@example.com', 'password123'),
     ('Ana', 'López', 'ana.lopez@example.com', 'securePass!'),
@@ -37,7 +33,6 @@ BEGIN
     ('Ernesto', 'Vargas', 'ernesto@gmail.com', 'ErnestoFG23'),
     ('Leonel', 'Messi', 'messi@gmail.com', 'messi10'),
     ('Cristiano', 'Ronaldo', 'ronaldo@gmail.com', 'ronaldo7');
-
     -- Creación de la tabla hotel
     CREATE TABLE hotel (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -48,14 +43,13 @@ BEGIN
         informacion VARCHAR(50) NOT NULL,
         habitaciones_disponibles INT NOT NULL
     );
-
     INSERT INTO hotel (nombre_hotel, num_hotel, cantidad_reservas, ubicacion, informacion,  habitaciones_disponibles) VALUES
-    ('Hotel Grand Palace', 101, 25, 'Calle Principal 123, Ciudad A', 'Lujoso y moderno', 55),
-    ('Hotel Blue Lagoon', 102, 15, 'Avenida del Mar 456, Ciudad B', 'Cerca de la playa', 40),
-    ('Hotel Central Park', 103, 30, 'Calle 7, Ciudad C', 'En el centro de la ciudad', 50),
-    ('Hotel Mountain Retreat', 104, 20, 'Ruta de las Montañas, Ciudad D', 'Retiro en la montaña', 25),
-    ('Hotel Urban Stay', 105, 10, 'Avenida de la Cultura 789, Ciudad E', 'Moderno y funcional',5 );
-
+    ('Hotel Grand Palace', 101, 6, 'Calle Principal 123, Ciudad A', 'Lujoso y moderno', 55),
+    ('Hotel Blue Lagoon', 102, 5, 'Avenida del Mar 456, Ciudad B', 'Cerca de la playa', 40),
+    ('Hotel Central Park', 103, 4, 'Calle 7, Ciudad C', 'En el centro de la ciudad', 50),
+    ('Hotel Mountain Retreat', 104, 4, 'Ruta de las Montañas, Ciudad D', 'Retiro en la montaña', 25),
+    ('Hotel Urban Stay', 105, 3, 'Avenida de la Cultura 789, Ciudad E', 'Moderno y funcional',5 );
+    
     -- Creación de la tabla habitaciones
     CREATE TABLE habitaciones (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -129,9 +123,8 @@ BEGIN
         reservas_id INT NOT NULL,
         status_habitacion VARCHAR(50) NOT NULL,
         FOREIGN KEY (reservas_id) REFERENCES reservas(id),
-        FOREIGN KEY (habitacion_id) REFERENCES reservas(habitacion_id)
+        FOREIGN KEY (habitacion_id) REFERENCES habitaciones(id)
     );
-
     INSERT INTO disponibilidad_habitaciones (habitacion_id, reservas_id, status_habitacion) VALUES
     (1, 1, "disponible"),
     (2, 2, "disponible"),
@@ -146,8 +139,6 @@ BEGIN
     (5, 11, "disponible"),
     (4, 12, "disponible"),
     (3, 13, "disponible");
-
-
     -- Creación de la tabla info_reserva_hotel
     CREATE TABLE info_reserva_hotel (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -155,8 +146,8 @@ BEGIN
         id_de_habitacion INT NOT NULL,
         codigo_habitacion VARCHAR(50) NOT NULL,
         FOREIGN KEY (reserva_id) REFERENCES reservas(id),
-        FOREIGN KEY (id_de_habitacion) REFERENCES reservas(habitacion_id), 
-        FOREIGN KEY (codigo_habitacion) REFERENCES reservas(codigo_de_habitacion)
+        FOREIGN KEY (id_de_habitacion) REFERENCES habitaciones(id),
+        FOREIGN KEY (codigo_habitacion) REFERENCES habitaciones(codigo_habitacion)
     );
 
     INSERT INTO info_reserva_hotel (reserva_id, id_de_habitacion, codigo_habitacion) VALUES
@@ -179,10 +170,9 @@ BEGIN
         id INT AUTO_INCREMENT PRIMARY KEY,
         fecha_reservacion DATE NOT NULL,
         reserva_id INT NOT NULL,
-        FOREIGN KEY (reserva_id) REFERENCES reservas(id),
-        FOREIGN KEY (fecha_reservacion) REFERENCES reservas(fecha_reservacion)
+        FOREIGN KEY (reserva_id) REFERENCES reservas(id)
     );
-
+    
     INSERT INTO reserva_fecha (fecha_reservacion, reserva_id) VALUES
     ('2024-08-20', 1),
     ('2024-08-22', 2),
@@ -197,16 +187,14 @@ BEGIN
     ('2024-07-28', 11),
     ('2024-08-29', 12),
     ('2024-08-30', 13);
-
     -- Creación de la tabla reserva_usuario
-    CREATE TABLE reserva_usuario (
+     CREATE TABLE reserva_usuario (
         id INT AUTO_INCREMENT PRIMARY KEY,
         usuario_id INT NOT NULL,
         reserva_id INT NOT NULL,
-        FOREIGN KEY (usuario_id) REFERENCES reservas(usuario_id), 
+        FOREIGN KEY (usuario_id) REFERENCES clientes(id),
         FOREIGN KEY (reserva_id) REFERENCES reservas(id)
     );
-
     INSERT INTO reserva_usuario (usuario_id, reserva_id) VALUES
     (1, 1),
     (2, 2),
@@ -221,7 +209,6 @@ BEGIN
     (8, 11),
     (9, 12),
     (10, 13);
-
     -- Creación de la tabla reserva_habitacion
     CREATE TABLE reserva_habitacion (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -230,7 +217,6 @@ BEGIN
         FOREIGN KEY (reserva_id) REFERENCES reservas(id),
         FOREIGN KEY (id_de_habitacion) REFERENCES habitaciones(id)
     );
-
     INSERT INTO reserva_habitacion (reserva_id, id_de_habitacion) VALUES
     (1, 1),
     (2, 2),

@@ -32,9 +32,7 @@ BEGIN
     WHERE reservas.fecha_reservacion >= rango1 AND reservas.fecha_reservacion <= rango2;
 END //
 
-
 CALL FechasRangosDisponibilidad("2024-06-12", "2024-07-30");
-
 
 
 SELECT * FROM reserva_fecha WHERE fecha_reservacion = '2024-08-20';
