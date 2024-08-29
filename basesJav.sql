@@ -66,6 +66,7 @@ BEGIN
     -- Crear un índice en la columna 'codigo_habitacion'
     CREATE INDEX idx_codigo_habitacion ON habitaciones(codigo_habitacion);
 
+    -- Creacion de las habitaciones con su codigo 
     INSERT INTO habitaciones (codigo_habitacion, precio, informacion_habitaciones, tipo_de_habitacion, hotel_id) VALUES
     ('HAB-01', 100, 'Vista al mar, 2 camas dobles', 1, 1),
     ('HAB-02', 150, 'Suite con balcón privado', 2, 1),

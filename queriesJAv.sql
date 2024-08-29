@@ -27,10 +27,9 @@ FROM hotel h
 JOIN habitaciones hb ON h.id = hb.hotel_id
 JOIN reservas r ON hb.id = r.habitacion_id
 JOIN disponibilidad_habitaciones dh ON hb.id = dh.habitacion_id
-WHERE r.fecha_reservacion BETWEEN '2024-07-29' AND '2024-08-29'
+WHERE r.fecha_reservacion BETWEEN '2024-07-01' AND '2024-07-31'
   AND dh.status_habitacion = 'disponible'
 ORDER BY h.nombre_hotel;
-
 
 ---------------------------------------------------------------------------------------------------------
 -- Consulta para calcular el promedio de reservas diarias en un hotel.

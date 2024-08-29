@@ -31,12 +31,12 @@ BEGIN
 END;
 
 CALL agregar_reserva(
-    34, 7, 'HAB-07', '2008-06-17', '2024-08-25', '2024-09-10'
+    71, 4, 'HAB-11', '2023-06-17', '2024-08-25', '2024-09-10'
 );
 
 -- triger nuevo----------------------------------
 
-CREATE TRIGGER after_reserva_delete
+CREATE TRIGGER resta_reservas
 AFTER UPDATE ON disponibilidad_habitaciones
 FOR EACH ROW
 BEGIN
@@ -44,10 +44,9 @@ BEGIN
     UPDATE hotel
     SET cantidad_reservas = cantidad_reservas - 1
     WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = OLD.habitacion_id);
-
 END;
 
----------------------------------------------------------
+-------------------------------------------------------------
 
 DROP PROCEDURE IF EXISTS agregar_reserva;
 
@@ -65,11 +64,8 @@ BEGIN
 END;
 
 
-
 USE basedata;
 DROP PROCEDURE IF EXISTS cancelar_reserva;
-
-
 
 DELIMITER //
 CREATE PROCEDURE cancelar_reserva(
@@ -89,6 +85,6 @@ BEGIN
 END //
 DELIMITER;
 
-CALL cancelar_reserva (3); -- se pasa el id de la reserva para que elimine
+CALL cancelar_reserva (22); -- se pasa el id de la reserva para que elimine
 
 ---------------------------------------------------------------------
