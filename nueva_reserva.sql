@@ -1,12 +1,17 @@
 
-DROP TRIGGER IF EXISTS after_reserva_insert;
+DROP TRIGGER IF EXISTS reservas_insert;
 
-CREATE TRIGGER after_reserva_insert
+CREATE TRIGGER reservas_insert
 AFTER INSERT ON reservas
 FOR EACH ROW
 BEGIN
+
+    UPDATE hotel
+    SET cantidad_reservas = cantidad_reservas + 1
+    WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = NEW.habitacion_id);
+
     INSERT INTO disponibilidad_habitaciones (habitacion_id, reservas_id, status_habitacion)
-    VALUES (NEW.habitacion_id, NEW.id, FALSE);
+    VALUES (NEW.habitacion_id, NEW.id, "ocupado");
 
     INSERT INTO info_reserva_hotel (reserva_id, id_de_habitacion, codigo_habitacion)
     VALUES (NEW.id, NEW.habitacion_id, NEW.codigo_de_habitacion);
@@ -23,19 +28,29 @@ BEGIN
     INSERT INTO codigo_de_reserva (codigo_habitacion, reserva_id)
     VALUES (NEW.codigo_de_habitacion, NEW.id);
 
-    UPDATE hotel
-    SET columna = valor1, columna2 = valor2
-    WHERE condicionnnn
-
 END;
 
 CALL agregar_reserva(
-    1, 1, 'HAB105', '2024-09-27', '2024-08-25', '2024-09-10'
+    34, 7, 'HAB-07', '2008-06-17', '2024-08-25', '2024-09-10'
 );
+
+-- triger nuevo----------------------------------
+
+CREATE TRIGGER after_reserva_delete
+AFTER UPDATE ON disponibilidad_habitaciones
+FOR EACH ROW
+BEGIN
+
+    UPDATE hotel
+    SET cantidad_reservas = cantidad_reservas - 1
+    WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = OLD.habitacion_id);
+
+END;
 
 ---------------------------------------------------------
 
 DROP PROCEDURE IF EXISTS agregar_reserva;
+
 CREATE PROCEDURE agregar_reserva(
     IN hab_id INT,
     IN usua_id INT,
@@ -49,40 +64,31 @@ BEGIN
     VALUES (hab_id, usua_id, codi_habitacion, fech_reserva, fech_entrada, fech_salida);
 END;
 
+
+
 USE basedata;
 DROP PROCEDURE IF EXISTS cancelar_reserva;
+
+
+
 DELIMITER //
 CREATE PROCEDURE cancelar_reserva(
-    IN p_reserva_id INT,
-    IN codigo VARCHAR(50),
-    IN usuario_id INT
+    IN p_reserva_id INT
 )
 BEGIN
-    DELETE FROM codigo_de_reserva
-    WHERE id = p_reserva_id;
+    -- Se hace un JOIN entre las tablas disponibilidad_habitaciones (dh) y reservas (r) utilizando 
+    -- la columna habitacion_id como referencia. Luego, se actualiza el status_habitacion de la tabla
+    -- disponibilidad_habitaciones cuando el id de la reserva coincide con p_reserva_id.
 
-    DELETE FROM reserva_habitacion
-    WHERE reserva_id = p_reserva_id;
+    UPDATE disponibilidad_habitaciones dh
+    JOIN reservas r 
+    ON dh.habitacion_id = r.habitacion_id AND reservas_id = p_reserva_id
+    SET dh.status_habitacion = "disponible"
+    WHERE r.id = p_reserva_id;
 
-    DELETE FROM reserva_usuario
-    WHERE reserva_id = p_reserva_id;
-
-    DELETE FROM reserva_fecha
-    WHERE reserva_id = p_reserva_id;
-
-    DELETE FROM disponibilidad_habitaciones
-    WHERE reservas_id = p_reserva_id;
-
-    DELETE FROM info_reserva_hotel
-    WHERE reserva_id = p_reserva_id;
-
-    DELETE FROM reservas
-    WHERE id = p_reserva_id;
 END //
 DELIMITER;
-CALL cancelar_reserva (1, 'HAB101', 1);
+
+CALL cancelar_reserva (3); -- se pasa el id de la reserva para que elimine
 
 ---------------------------------------------------------------------
-UPDATE hotel
-SET habitaciones_disponibles = NOW.habitaciones_disponibles -= 1
-WHERE id

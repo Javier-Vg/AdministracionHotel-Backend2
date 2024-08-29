@@ -20,41 +20,44 @@ SELECT * FROM reservas WHERE usuario_id IN (
 ) AND reservas.fecha_reservacion < "2024-08-01";
 
 ------------------------------------------------------------------------------------------------------------
--- Consulta para identificar el hotel con la mayor ocupación en el mes anterior.
+-- Consulta para listar los hoteles que tienen habitaciones disponibles pero no han sido reservadas en el último mes.
 
-SELECT nombre_hotel
-FROM hotel, reservas
-WHERE reserva_fecha.fecha_reservacion < "2024-08-01" and hotel.nombre_hotel = "Hotel Urban Stay";
-
-SELECT nombre_hotel
-FROM hotel
-WHERE 
-
-----------------------------------------------------------------------------------------------------------------
-
-SELECT
-    hotel.id,
-    COUNT(reservas.id) AS Cantidad_reserva
-FROM
-    reservas
-INNER JOIN
-    habitaciones hab ON reservas.habitacion_id = hab.id
-INNER JOIN
-    hotel ON hab.hotel_id = hotel.id
-WHERE
-    MONTH(reservas.fecha_salida) = MONTH(CURDATE() - INTERVAL 1 MONTH)
-    AND YEAR(reservas.fecha_salida) = YEAR(CURDATE() - INTERVAL 1 MONTH)
-GROUP BY
-    hotel.id
-ORDER BY
-    Cantidad_reserva DESC
-LIMIT 1;
+SELECT DISTINCT h.nombre_hotel, h.ubicacion
+FROM hotel h
+JOIN habitaciones hb ON h.id = hb.hotel_id
+JOIN reservas r ON hb.id = r.habitacion_id
+JOIN disponibilidad_habitaciones dh ON hb.id = dh.habitacion_id
+WHERE r.fecha_reservacion BETWEEN '2024-07-29' AND '2024-08-29'
+  AND dh.status_habitacion = 'disponible'
+ORDER BY h.nombre_hotel;
 
 
 ---------------------------------------------------------------------------------------------------------
 -- Consulta para calcular el promedio de reservas diarias en un hotel.
 
-SELECT AVG(VacationHours)AS 'Average vacation hours',
-    SUM(SickLeaveHours) AS 'Total sick leave hours'
-FROM HumanResources.Employee
-WHERE JobTitle LIKE 'Vice President%';
+SELECT 
+h.nombre_hotel,
+AVG(daily_reservations.num_reservas) AS promedio_reservas_diarias
+FROM 
+    hotel h
+JOIN 
+    habitaciones hab ON h.id = hab.hotel_id
+JOIN 
+    reservas r ON hab.id = r.habitacion_id
+JOIN 
+    (
+        SELECT 
+            fecha_reservacion,
+            COUNT(*) AS num_reservas
+        FROM 
+            reservas
+        GROUP BY 
+            fecha_reservacion
+    ) AS daily_reservations ON r.fecha_reservacion = daily_reservations.fecha_reservacion
+GROUP BY 
+    h.nombre_hotel;
+
+
+
+
+
