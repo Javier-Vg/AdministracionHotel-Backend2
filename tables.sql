@@ -1,4 +1,6 @@
+CREATE DATABASE basedata
 
+use basedata;
 
 CREATE PROCEDURE crearTablas()
 BEGIN
@@ -423,11 +425,4 @@ INSERT INTO reserva_usuario (usuario_id, reserva_id) VALUES
 END;
 -- Llamada al procedimiento
 CALL crearTablas();--Crea las tablas
-
-
-
-
-
-
-
 

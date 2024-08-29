@@ -1,8 +1,8 @@
 
 DROP TRIGGER IF EXISTS reserva_insert;
 
+-----------------trigger que resta un espacio en las reservas de un hotel en especifico-------------------
 
--- triger nuevo----------------------------------
 CREATE TRIGGER resta_reservas
 AFTER UPDATE ON disponibilidad_habitaciones
 FOR EACH ROW
@@ -13,8 +13,9 @@ BEGIN
 
 END;
 
---------------------------------------------------
-DROP TRIGGER reserva_insert 
+--------------------------------------------------------------------------------------------------------------
+
+DROP TRIGGER IF EXISTS reservas_insert;
 
 CREATE TRIGGER reserva_insert
 AFTER INSERT ON reservas
@@ -26,7 +27,7 @@ BEGIN
     WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = NEW.habitacion_id);
    
     INSERT INTO disponibilidad_habitaciones (habitacion_id, reservas_id, status_habitacion)
-    VALUES (NEW.habitacion_id, NEW.id, "ocupado");
+    VALUES (NEW.habitacion_id, NEW.id, "ocupado"); --Se le asigna el status "ocupado" ya que se reservo esa habitacion.
 
   
     INSERT INTO info_reserva_hotel (reserva_id, id_de_habitacion, codigo_habitacion)
@@ -49,9 +50,4 @@ BEGIN
     VALUES (NEW.codigo_de_habitacion, NEW.id);
 END;
 
-CALL agregar_reserva(
-    74, 5, 'HAB-14', '2024-09-13', '2024-08-23', '2024-09-10'
-);
-
--- Aquí debrían poner un CURDATE() para que la fecha de reseva se meta automaticamente a la de hhoy, y si preguntan, en la tabla deberán meter un DEFAULT DATE. ;)
 
