@@ -42,15 +42,18 @@ DELIMITER;
 DELIMITER //
 CREATE PROCEDURE ConsultarDisponibilidad(IN fecha DATE)
 BEGIN
-    SELECT DISTINCT hotel.nombre_hotel, reservas.fecha_reservacion, reservas.id as reserva_id, disponibilidad_habitaciones.status_habitacion
+    SELECT DISTINCT hotel.nombre_hotel, 
+                    reservas.fecha_reservacion, 
+                    reservas.id as reserva_id, 
+                    disponibilidad_habitaciones.status_habitacion -- Estado de la habitación (disponible o no disponible)
     FROM reservas 
-    INNER JOIN habitaciones 
+    INNER JOIN habitaciones   -- Une con la tabla de habitaciones usando el id de la habitación
     ON reservas.habitacion_id = habitaciones.id
-    INNER JOIN hotel 
+    INNER JOIN hotel   -- Une con la tabla de hoteles usando el id del hotel
     ON habitaciones.hotel_id = hotel.id
     INNER JOIN disponibilidad_habitaciones 
     ON reservas.id = disponibilidad_habitaciones.reservas_id
-    WHERE reservas.fecha_reservacion = fecha;
+    WHERE reservas.fecha_reservacion = fecha;  -- Filtra las reservas por una fecha específica
 END //
 
 DELIMITER;
@@ -61,17 +64,20 @@ DELIMITER;
 DELIMITER ;
 CREATE PROCEDURE FechasRangosDisponibilidad(IN rango1 DATE, IN rango2 DATE)
 BEGIN
-    SELECT DISTINCT hotel.nombre_hotel, reservas.fecha_reservacion, reservas.id AS reserva_id, disponibilidad_habitaciones.status_habitacion
+    SELECT DISTINCT hotel.nombre_hotel, 
+                    reservas.fecha_reservacion, 
+                    reservas.id AS reserva_id, 
+                    disponibilidad_habitaciones.status_habitacion   -- Estado de la habitación (disponible o no disponible)
     FROM reservas 
-    INNER JOIN habitaciones ON reservas.habitacion_id = habitaciones.id
-    INNER JOIN hotel ON habitaciones.hotel_id = hotel.id
-    INNER JOIN disponibilidad_habitaciones ON reservas.id = disponibilidad_habitaciones.reservas_id
+    INNER JOIN habitaciones ON reservas.habitacion_id = habitaciones.id  -- Une con la tabla de habitaciones usando el id de la habitación
+    INNER JOIN hotel ON habitaciones.hotel_id = hotel.id  -- Une con la tabla de hoteles usando el id del hotel
+    INNER JOIN disponibilidad_habitaciones ON reservas.id = disponibilidad_habitaciones.reservas_id  -- Une con la tabla de disponibilidad de habitaciones usando el id de la reserva
     WHERE reservas.fecha_reservacion >= rango1 AND reservas.fecha_reservacion <= rango2;
 END //
 
 -------------------------------------------------------------------------------------------
 
-CALL cancelar_reserva (11); -- se pasa el id de la reserva para que elimine.
+CALL cancelar_reserva (5); -- se pasa el id de la reserva para que elimine.
 
 CALL FechasRangosDisponibilidad("2024-06-12", "2024-07-30");  -- Se pasan fechas entre un rango.
 
@@ -79,7 +85,7 @@ CALL ConsultarDisponibilidad("2024-08-20"); -- Se pasa una fecha para consultar 
 
 DROP PROCEDURE IF EXISTS cancelar_reserva; -- Borra un procedure.
 
--- Se ingresa una reserva nueva enviandole el id de la habitacion y el codigo de habitacion de esa habitacion
+-- Se ingresa una reserva nueva enviandole el id de la habitacion y el codigo de habitacion de esa habitacion.
 CALL agregar_reserva(
-    43, 5, 'HAB-13', '2024-010-13', '2024-10-23', '2024-010-29'
+    8, 9, "HAB-03", '2024-07-13', '2024-10-23', '2024-010-29'
 );
