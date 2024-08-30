@@ -1,32 +1,47 @@
-
 DROP TRIGGER IF EXISTS reserva_insert;
 
+-----------------trigger que resta un espacio en las reservas de un hotel en especifico-------------------
 
--- triger nuevo----------------------------------
+
+--Trigger que va a dispararse cuando se actualizen datos a la tabla "disponibilidad_habitaciones".
+  -- Establece la nueva cantidad de reservas reduciendo en 1
+  --Subconsulta para obtener el hotel_id de la habitación que se está actualizando
+-- Aquí, se está utilizando una subconsulta para encontrar el hotel_id asociado con la habitacion_id que está siendo actualizada.
+
+
+
 CREATE TRIGGER resta_reservas
-AFTER UPDATE ON disponibilidad_habitaciones
+AFTER UPDATE ON disponibilidad_habitaciones 
 FOR EACH ROW
 BEGIN
     UPDATE hotel
-    SET cantidad_reservas = cantidad_reservas - 1
-    WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = OLD.habitacion_id);
+    SET cantidad_reservas = cantidad_reservas - 1  
+    WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = OLD.habitacion_id); 
 
 END;
 
---------------------------------------------------
-DROP TRIGGER reserva_insert 
+--------------------------------------------------------------------------------------------------------------
+
+
+
+-- Establece la nueva cantidad de reservas aumentando en 1
+-- NEW.id es el ID de la nueva reserva que se está creando.
+ --Trigger que va a dispararse cuando se inserten datos a la tabla "reservas".
+ -- son referencias a los valores del nuevo registro en el contexto de un trigger.
+
+DROP TRIGGER IF EXISTS reservas_insert; 
 
 CREATE TRIGGER reserva_insert
-AFTER INSERT ON reservas
+AFTER INSERT ON reservas 
 FOR EACH ROW
 BEGIN
 
     UPDATE hotel
-    SET cantidad_reservas = cantidad_reservas + 1
+    SET cantidad_reservas = cantidad_reservas + 1  
     WHERE id = (SELECT hotel_id FROM habitaciones WHERE id = NEW.habitacion_id);
    
     INSERT INTO disponibilidad_habitaciones (habitacion_id, reservas_id, status_habitacion)
-    VALUES (NEW.habitacion_id, NEW.id, "ocupado");
+    VALUES (NEW.habitacion_id, NEW.id, "ocupado");  
 
   
     INSERT INTO info_reserva_hotel (reserva_id, id_de_habitacion, codigo_habitacion)
@@ -47,11 +62,6 @@ BEGIN
   
     INSERT INTO codigo_de_reserva (codigo_habitacion, reserva_id)
     VALUES (NEW.codigo_de_habitacion, NEW.id);
+
+   
 END;
-
-CALL agregar_reserva(
-    74, 5, 'HAB-14', '2024-09-13', '2024-08-23', '2024-09-10'
-);
-
--- Aquí debrían poner un CURDATE() para que la fecha de reseva se meta automaticamente a la de hhoy, y si preguntan, en la tabla deberán meter un DEFAULT DATE. ;)
-

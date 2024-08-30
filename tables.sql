@@ -1,4 +1,6 @@
+CREATE DATABASE basedata
 
+use basedata;
 
 CREATE PROCEDURE crearTablas()
 BEGIN
@@ -13,6 +15,7 @@ BEGIN
     INSERT INTO administradores (nombre, apellido, correo, contrasena) VALUES
     ('Javier', 'Guzmán', 'jvargas@fwdcostarica.com', 'javier34500'),
     ("Alexia", "Cahil", "acahil@fwdcostarica.com", "ale123");
+    
     -- Creación de la tabla usuarios
     CREATE TABLE clientes (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -137,8 +140,8 @@ BEGIN
     ('HAB-13', 130, 'Vista a la piscina, 2 camas individuales', 3, 5),
     ('HAB-14', 160, 'Vista al jardín, 2 camas dobles', 4, 5),
     ('HAB-15', 190, 'Suite con balcón privado', 5, 5);
-    -- Creación de la tabla reservas
-    CREATE TABLE reservas (
+    -- Creación de la tabla reservas, almacenas los datos de la reserva.
+     CREATE TABLE reservas (
         id INT AUTO_INCREMENT PRIMARY KEY,
         habitacion_id INT NOT NULL,
         usuario_id INT NOT NULL,
@@ -153,37 +156,39 @@ BEGIN
 
 INSERT INTO reservas (habitacion_id, usuario_id, codigo_de_habitacion, fecha_reservacion, fecha_entrada, fecha_salida) VALUES
     (1, 1, 'HAB-01', '2024-08-20', '2024-08-25', '2024-08-30'),
-    (67, 2, 'HAB-02', '2024-08-22', '2024-08-27', '2024-09-02'),
-    (3, 3, 'HAB-03', '2024-09-23', '2024-09-28', '2024-10-05'),
-    (70, 7, 'HAB-01', '2024-08-24', '2024-08-28', '2024-09-05'),
-    (2, 2, 'HAB-02', '2024-05-22', '2024-06-27', '2024-07-02'),
-    (3, 3, 'HAB-03', '2024-08-23', '2024-08-28', '2024-09-05'),
-    (4, 4, 'HAB-04', '2024-08-24', '2024-08-29', '2024-09-03'),
-    (48, 5, 'HAB-05', '2024-06-25', '2024-07-30', '2024-08-06'),
-    (4, 6, 'HAB-06', '2024-08-26', '2024-08-31', '2024-09-07'),
-    (2, 7, 'HAB-14', '2024-08-27', '2024-09-01', '2024-09-08'),
-    (5, 8, 'HAB-08', '2024-07-28', '2024-08-02', '2024-08-09'),
-    (4, 9, 'HAB-09', '2024-08-29', '2024-09-03', '2024-09-10'),
-    (3, 10, 'HAB-10', '2024-08-30', '2024-09-12', '2024-09-17'),
-    (3, 10, 'HAB-10', '2024-08-30', '2024-09-05', '2024-09-10'),
-    (59, 5, 'HAB-11', '2024-08-31', '2024-09-07', '2024-09-12'),
-    (5, 2, 'HAB-12', '2024-09-01', '2024-09-08', '2024-09-13'),
-    (3, 3, 'HAB-13', '2024-09-02', '2024-09-09', '2024-09-14'),
-    (19, 4, 'HAB-14', '2024-09-03', '2024-09-10', '2024-09-15'),
-    (2, 5, 'HAB-15', '2024-09-04', '2024-09-11', '2024-09-16'),
-    (56, 6, 'HAB-13', '2024-09-05', '2024-09-12', '2024-09-17'),
-    (1, 7, 'HAB-12', '2024-09-06', '2024-09-13', '2024-09-18'),
-    (5, 8, 'HAB-05', '2024-09-07', '2024-09-14', '2024-09-19'),
-    (17, 9, 'HAB-01', '2024-09-08', '2024-09-15', '2024-09-20'),
-    (24, 2, 'HAB-13', '2024-09-09', '2024-09-16', '2024-09-21'),
-    (71, 2, 'HAB-09', '2024-09-10', '2024-09-17', '2024-09-22'),
-    (24, 8, 'HAB-09', '2024-09-11', '2024-09-18', '2024-09-23'),
-    (3, 8, 'HAB-07', '2024-09-12', '2024-09-19', '2024-09-24'),
-    (5, 3, 'HAB-11', '2024-10-13', '2024-010-20', '2024-10-25'),
-    (43, 1, 'HAB-10', '2024-05-13', '2024-05-20', '2024-05-25'),
-    (1, 4, 'HAB-10', '2024-07-13', '2024-07-20', '2024-07-25');
+    (67, 2,'HAB-07','2024-08-22', '2024-08-27', '2024-09-02'),
+    (3, 3, 'HAB-03','2024-09-23', '2024-09-28', '2024-10-05'),
+    (70, 7,'HAB-01','2024-08-24', '2024-08-28', '2024-09-05'),
+    (2, 2,'HAB-02', '2024-05-22', '2024-06-27', '2024-07-02'),
+    (3, 3, 'HAB-03','2024-08-23', '2024-08-28', '2024-09-05'),
+    (4, 4, 'HAB-04','2024-08-24', '2024-08-29', '2024-09-03'),
+    (48, 5, 'HAB-03','2024-06-25', '2024-07-30', '2024-08-06'),
+    (4, 6, 'HAB-04','2024-08-26', '2024-08-31', '2024-09-07'),
+    (2, 7, 'HAB-02','2024-08-27', '2024-09-01', '2024-09-08'),
+    (5, 8, 'HAB-05','2024-07-28', '2024-08-02', '2024-08-09'),
+    (4, 9, 'HAB-04','2024-08-29', '2024-09-03', '2024-09-10'),
+    (3, 10, 'HAB-03','2024-08-30', '2024-09-12', '2024-09-17'),
+    (3, 10, 'HAB-03','2024-08-30', '2024-09-05', '2024-09-10'),
+    (59, 5, 'HAB-14','2024-08-31', '2024-09-07', '2024-09-12'),
+    (5, 2, 'HAB-05','2024-09-01', '2024-09-08', '2024-09-13'),
+    (3, 3, 'HAB-03','2024-09-02', '2024-09-09', '2024-09-14'),
+    (19, 4, 'HAB-01','2024-09-03', '2024-09-10', '2024-09-15'),
+    (2, 5, 'HAB-02','2024-09-04', '2024-09-11', '2024-09-16'),
+    (56, 6, 'HAB-11','2024-09-05', '2024-09-12', '2024-09-17'),
+    (1, 7, 'HAB-01','2024-09-06', '2024-09-13', '2024-09-18'),
+    (5, 8, 'HAB-05','2024-09-07', '2024-09-14', '2024-09-19'),
+    (17, 9, 'HAB-02','2024-09-08', '2024-09-15', '2024-09-20'),
+    (24, 2, 'HAB-09','2024-09-09', '2024-09-16', '2024-09-21'),
+    (71, 2, 'HAB-11','2024-09-10', '2024-09-17', '2024-09-22'),
+    (24, 8, 'HAB-09','2024-09-11', '2024-09-18', '2024-09-23'),
+    (3, 8, 'HAB-03','2024-09-12', '2024-09-19', '2024-09-24'),
+    (5, 3, 'HAB-05','2024-10-13', '2024-010-20', '2024-10-25'),
+    (43, 1, 'HAB-13','2024-05-13', '2024-05-20', '2024-05-25'),
+    (1, 4, 'HAB-01','2024-07-13', '2024-07-20', '2024-07-25');
+
+
     CREATE INDEX idx_fecha_reservacion ON reservas(fecha_reservacion);
-    -- Creación de la tabla disponibilidad_habitaciones
+    -- Creación de la tabla disponibilidad_habitaciones, donde se ve si la habitacion esta ocupada o no.
     CREATE TABLE disponibilidad_habitaciones (
         id INT AUTO_INCREMENT PRIMARY KEY,
         habitacion_id INT NOT NULL,
@@ -223,7 +228,7 @@ INSERT INTO reservas (habitacion_id, usuario_id, codigo_de_habitacion, fecha_res
     (5, 28, "ocupado"),
     (43, 29, "ocupado"),
     (1, 30, "ocupado");
-    -- Creación de la tabla info_reserva_hotel
+    -- Creación de la tabla info_reserva_hotel, tabla intermedia
     CREATE TABLE info_reserva_hotel (
         id INT AUTO_INCREMENT PRIMARY KEY,
         reserva_id INT NOT NULL,
@@ -235,36 +240,36 @@ INSERT INTO reservas (habitacion_id, usuario_id, codigo_de_habitacion, fecha_res
     );
     INSERT INTO info_reserva_hotel (reserva_id, id_de_habitacion, codigo_habitacion) VALUES
     (1, 1 , 'HAB-01' ),
-    (2, 67 , 'HAB-02'),
+    (2, 67 , 'HAB-07'),
     (3, 3 ,  'HAB-03'),
     (4, 70 , 'HAB-01'),
     (5, 2 ,  'HAB-02'),
     (6, 3 , 'HAB-03'),
     (7, 4 , 'HAB-04'),
-    (8, 48 ,  'HAB-05'),
-    (9, 4 , 'HAB-06'),
-    (10, 2 , 'HAB-14'),
-    (11, 5 , 'HAB-08'),
-    (12, 4 , 'HAB-09'),
-    (13, 3 , 'HAB-10'),
-    (14, 3 , 'HAB-10'),
-    (15, 59 ,  'HAB-11'),
-    (16, 5 , 'HAB-12'),
-    (17, 3 , 'HAB-13'),
-    (18,1  , 'HAB-14'),
-    (19, 2 , 'HAB-15'),
-    (20, 56 , 'HAB-13'),
-    (21, 1 , 'HAB-12'),
+    (8, 48 ,  'HAB-03'),
+    (9, 4 , 'HAB-04'),
+    (10, 2 , 'HAB-02'),
+    (11, 5 , 'HAB-05'),
+    (12, 4 , 'HAB-04'),
+    (13, 3 , 'HAB-03'),
+    (14, 3 , 'HAB-03'),
+    (15, 59 ,  'HAB-14'),
+    (16, 5 , 'HAB-05'),
+    (17, 3 , 'HAB-03'),
+    (18,1  , 'HAB-01'),
+    (19, 2 , 'HAB-02'),
+    (20, 56 , 'HAB-11'),
+    (21, 1 , 'HAB-01'),
     (22, 5 , 'HAB-05'),
-    (23, 17 ,  'HAB-01'),
-    (24, 24 , 'HAB-13'),
-    (25, 71 , 'HAB-09'),
+    (23, 17 ,  'HAB-02'),
+    (24, 24 , 'HAB-09'),
+    (25, 71 , 'HAB-11'),
     (26, 24 ,  'HAB-09'),
-    (27, 3 , 'HAB-07'),
-    (28, 5 , 'HAB-11'),
-    (29, 43 , 'HAB-10'),
-    (30, 1 , 'HAB-10');
-    -- Creación de la tabla reserva_fecha
+    (27, 3 , 'HAB-03'),
+    (28, 5 , 'HAB-05'),
+    (29, 43 , 'HAB-13'),
+    (30, 1 , 'HAB-01');
+    -- Creación de la tabla reserva_fecha, para consultar las reservas por fecha.
     CREATE TABLE reserva_fecha (
         id INT AUTO_INCREMENT PRIMARY KEY,
         fecha_reservacion DATE NOT NULL,
@@ -302,7 +307,7 @@ INSERT INTO reservas (habitacion_id, usuario_id, codigo_de_habitacion, fecha_res
     ('2024-10-13', 28),
     ('2024-05-13', 29),
     ('2024-07-13', 30);
-    -- Creación de la tabla reserva_usuario
+    -- Creación de la tabla reserva_usuario, para registrar el usuario.
      CREATE TABLE reserva_usuario (
         id INT AUTO_INCREMENT PRIMARY KEY,
         usuario_id INT NOT NULL,
@@ -390,44 +395,37 @@ INSERT INTO reserva_usuario (usuario_id, reserva_id) VALUES
         FOREIGN KEY (reserva_id) REFERENCES reservas(id)
     );
     INSERT INTO codigo_de_reserva (codigo_habitacion, reserva_id) VALUES
-    ('HAB-01',1),
-    ('HAB-02',2),
-    ('HAB-03',3),
-    ('HAB-01',4),
-    ('HAB-02',5),
-    ('HAB-03',6),
-    ('HAB-04',7),
-    ('HAB-05',8),
-    ('HAB-06',9),
-    ('HAB-14',10),
-    ('HAB-08',11),
-    ('HAB-09',12),
-    ('HAB-10',13),
-    ('HAB-10',14),
-    ('HAB-11',15),
-    ('HAB-12',16),
-    ('HAB-13',17),
-    ('HAB-14',18),
-    ('HAB-15',19),
-    ('HAB-13',20),
-    ('HAB-12',21),
-    ('HAB-05',22),
-    ('HAB-01',23),
-    ('HAB-13',24),
-    ('HAB-09',25),
-    ('HAB-09',26),
-    ('HAB-07',27),
-    ('HAB-11',28),
-    ('HAB-10',29),
-    ('HAB-10',30);
+    ('HAB-01', 1),
+    ('HAB-07', 2 ),
+    ('HAB-03', 3),
+    ('HAB-01', 4),
+    ('HAB-02', 5),
+    ('HAB-03', 6),
+    ('HAB-04', 7),
+    ('HAB-03', 8),
+    ('HAB-04', 9),
+    ('HAB-02', 10),
+    ('HAB-05', 11),
+    ('HAB-04', 12),
+    ('HAB-03', 13),
+    ('HAB-03', 14),
+    ('HAB-14', 15),
+    ('HAB-05', 16),
+    ('HAB-03', 17),
+    ('HAB-01', 18),
+    ('HAB-02', 19),
+    ('HAB-11', 20),
+    ('HAB-01', 21),
+    ('HAB-05', 22),
+    ('HAB-02', 23),
+    ('HAB-09', 24),
+    ('HAB-11', 25),
+    ('HAB-09', 26),
+    ('HAB-03', 27),
+    ('HAB-05', 28),
+    ('HAB-13', 29),
+    ('HAB-01', 30);
 END;
 -- Llamada al procedimiento
 CALL crearTablas();--Crea las tablas
-
-
-
-
-
-
-
 
