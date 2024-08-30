@@ -15,6 +15,7 @@ BEGIN
     INSERT INTO administradores (nombre, apellido, correo, contrasena) VALUES
     ('Javier', 'Guzmán', 'jvargas@fwdcostarica.com', 'javier34500'),
     ("Alexia", "Cahil", "acahil@fwdcostarica.com", "ale123");
+    
     -- Creación de la tabla usuarios
     CREATE TABLE clientes (
         id INT AUTO_INCREMENT PRIMARY KEY,

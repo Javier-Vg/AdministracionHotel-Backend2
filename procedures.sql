@@ -15,6 +15,11 @@ BEGIN
     VALUES (hab_id, usua_id, codi_habitacion, fech_reserva, fech_entrada, fech_salida);
 END;
 
+
+-- Se ingresa una reserva nueva enviandole el id de la habitacion y el codigo de habitacion de esa habitacion.
+CALL agregar_reserva(
+    8, 9, "HAB-03", '2024-07-13', '2024-10-23', '2024-010-29'
+);
 -------------------------------------------------------------------------------------------
 
 -- Cancelar reserva:
@@ -36,6 +41,10 @@ BEGIN
 
 END 
 DELIMITER;
+
+CALL cancelar_reserva (30); -- se pasa el id de la reserva para que elimine.
+
+
 
 -- Consultar la disponibilidad de habitaciones por fecha.
 
@@ -77,7 +86,7 @@ END //
 
 -------------------------------------------------------------------------------------------
 
-CALL cancelar_reserva (5); -- se pasa el id de la reserva para que elimine.
+
 
 CALL FechasRangosDisponibilidad("2024-06-12", "2024-07-30");  -- Se pasan fechas entre un rango.
 
@@ -85,7 +94,3 @@ CALL ConsultarDisponibilidad("2024-08-20"); -- Se pasa una fecha para consultar 
 
 DROP PROCEDURE IF EXISTS cancelar_reserva; -- Borra un procedure.
 
--- Se ingresa una reserva nueva enviandole el id de la habitacion y el codigo de habitacion de esa habitacion.
-CALL agregar_reserva(
-    8, 9, "HAB-03", '2024-07-13', '2024-10-23', '2024-010-29'
-);

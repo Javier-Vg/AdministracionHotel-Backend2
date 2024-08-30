@@ -1,36 +1,28 @@
--- Consulta para encontrar el hotel con la mayor ocupación en el mes anterior
-  SELECT 
-    h.nombre_hotel,                    -- Selecciona el nombre del hotel
-    COUNT(r.id) AS total_reservas      -- Cuenta el total de reservas
-FROM 
-    reservas r                         -- Desde la tabla 'reservas'
-JOIN 
-    habitaciones ha ON r.habitacion_id = ha.id  -- Une con 'habitaciones' por 'habitacion_id'
-JOIN 
-    hotel h ON ha.hotel_id = h.id      -- Une con 'hotel' por 'hotel_id'
-WHERE 
-    r.fecha_reservacion >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) 
-    AND r.fecha_reservacion <= LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) -- Filtra reservas del mes anterior
-GROUP BY 
-    h.nombre_hotel                     -- Agrupa por nombre del hotel
-ORDER BY 
-    total_reservas DESC                -- Ordena por total de reservas en forma descendente
-LIMIT 1;                               -- Limita el resultado al hotel con más reservas
-                            -- Limita el resultado al primer registro (hotel con la mayor ocupación)
 
+--javi
 
---new
-SELECT h.nombre_hotel, COUNT(r.id) AS total_reservas
-FROM reservas r
-JOIN habitaciones hab ON r.habitacion_id = hab.id
-JOIN hotel h ON hab.hotel_id = h.id
-WHERE r.fecha_entrada BETWEEN DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND LAST_DAY(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
-GROUP BY h.id
-ORDER BY total_reservas DESC
+--new -- -- Consulta para encontrar el hotel con la mayor ocupación en el mes anterior
+
+SELECT
+    h.id AS hotel_id,
+    h.nombre_hotel,
+    COUNT(r.id) AS total_reservas
+FROM
+    reservas r
+JOIN
+    habitaciones hab ON r.habitacion_id = hab.id
+JOIN
+    hotel h ON hab.hotel_id = h.id
+WHERE
+    r.fecha_entrada >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    AND r.fecha_entrada < CURDATE()
+GROUP BY
+    h.id, h.nombre_hotel
+ORDER BY
+    total_reservas DESC
 LIMIT 1;
 
-
-
+--javi
 -- Consulta para contar cuántas habitaciones disponibles hay en un hotel específico en una fecha dada.
 
 SELECT DISTINCT hotel.nombre_hotel, reserva_fecha.fecha_reservacion, hotel.habitaciones_disponibles
@@ -39,7 +31,7 @@ INNER JOIN reserva_fecha
 ON reserva_fecha.fecha_reservacion = "2024-08-20" AND hotel.nombre_hotel = "Hotel Urban Stay";
 
 ---------------------------------------------------------------------------------------------
-
+--ale
 -- Consulta para obtener toda la información de un hotel específico
 SELECT 
     *                                    -- Selecciona todas las columnas de la tabla
@@ -50,6 +42,7 @@ WHERE
 
 ---------------------------------------------------------------------------------------------
 
+--ale
 -- Consulta para obtener el total de reservas por hotel
 SELECT 
     h.nombre_hotel,                       -- Selecciona el nombre del hotel
@@ -66,7 +59,7 @@ ORDER BY
     total_reservas DESC;                 -- Ordena los resultados en orden descendente por el total de reservas
 
 ---------------------------------------------------------------------------------------------
-
+--javi
 -- Consulta para buscar hoteles cuya ubicación comienza con un texto específico.
 
 SELECT hotel.nombre_hotel
@@ -74,7 +67,7 @@ FROM hotel
 WHERE hotel.nombre_hotel LIKE "Hotel Urban%";
 
 ---------------------------------------------------------------------------------------------
-
+--ale
 -- Consulta para obtener todos los hoteles en una ubicación específica
 SELECT 
     *                                   
@@ -84,6 +77,7 @@ WHERE
     ubicacion LIKE '%Ciudad A';         -- Filtra por hoteles cuya ubicación contiene 'Ciudad A'
 
 -----------------------------------------------------------------------------------------------------------
+--javi
 -- Consulta para obtener las reservas de un cliente (por email) realizadas en el mes anterior.
 
 SELECT * FROM reservas WHERE usuario_id IN (
@@ -91,6 +85,7 @@ SELECT * FROM reservas WHERE usuario_id IN (
 ) AND reservas.fecha_reservacion < "2024-08-01" AND reservas.fecha_reservacion > "2024-07-01";
 
 ------------------------------------------------------------------------------------------------------------
+--javi
 -- Consulta para listar los hoteles que tienen habitaciones disponibles pero no han sido reservadas en el último mes.
 
 SELECT DISTINCT h.nombre_hotel, h.ubicacion
@@ -105,34 +100,28 @@ ORDER BY h.nombre_hotel;   -- Ordena los resultados por el nombre del hotel en o
 ---------------------------------------------------------------------------------------------------------
 -- Consulta para calcular el promedio de reservas diarias en un hotel.
 
-SELECT 
+--javi
+
+SELECT
     h.nombre_hotel,  -- Nombre del hotel
     AVG(daily_reservations.num_reservas) AS promedio_reservas_diarias  -- Promedio de reservas diarias para cada hotel
-
--- De la tabla de hoteles
 FROM
     hotel h
--- Une con la tabla de habitaciones usando el id del hotel
-JOIN 
-    habitaciones hab ON h.id = hab.hotel_id
--- Une con la tabla de reservas usando el id de la habitación
-JOIN 
+JOIN
+    habitaciones hab ON h.id = hab.hotel_id -- Une con la tabla de habitaciones usando el id del hotel
+JOIN -- Une con la tabla de reservas usando el id de la habitación
     reservas r ON hab.id = r.habitacion_id
--- Une con una subconsulta que calcula el número de reservas por fecha
-JOIN 
+JOIN -- Une con una subconsulta que calcula el número de reservas por fecha
     (
-        -- Subconsulta para contar el número de reservas por fecha
-        SELECT 
+        SELECT -- Subconsulta para contar el número de reservas por fecha
             fecha_reservacion,  -- Fecha de la reserva
             COUNT(*) AS num_reservas  -- Número total de reservas para esa fecha
-        FROM 
+        FROM
             reservas
-        GROUP BY 
+        GROUP BY
             fecha_reservacion  -- Agrupa por fecha de reserva
     ) AS daily_reservations ON r.fecha_reservacion = daily_reservations.fecha_reservacion
-
--- Agrupa los resultados por el nombre del hotel
-GROUP BY 
+GROUP BY -- Agrupa los resultados por el nombre del hotel
     h.nombre_hotel;
 
 
